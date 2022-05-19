@@ -4,4 +4,6 @@ const router = express.Router();
 
 router.get('/login', UserController.getUserByEmail);
 
+router.get('/getUserInformation', UserController.getUserInformation);
+
 module.exports = router;
