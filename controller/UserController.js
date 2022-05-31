@@ -4,6 +4,13 @@ class UserController {
 
     static async getUserInformation(req, res){
         const { user_id } = req.body;
+        //check request value type
+        if (typeof(user_id)!= "number"){
+            res.status(400).json({
+                error_code:400,
+                message:"type of 'user_id' isn't correct"
+            });
+        }
         console.log("request user_id : "+user_id);
         try {
             dbUserAccount.getConnection((error,con)=>{
@@ -38,6 +45,13 @@ class UserController {
 
     static async getUserAccount(req, res){
         const { user_id } = req.body;
+        //check request value type
+        if (typeof(user_id)!= "number"){
+            res.status(400).json({
+                error_code:400,
+                message:"type of 'user_id' isn't correct"
+            });
+        }
         console.log("request => user_id : "+user_id);
         try {
             dbUserAccount.getConnection((error,con)=>{
@@ -71,6 +85,13 @@ class UserController {
 
     static async getLinkRef(req, res){
         const { user_id } = req.body;
+        //check request value type
+        if (typeof(user_id)!= "number"){
+            res.status(400).json({
+                error_code:400,
+                message:"type of 'user_id' isn't correct"
+            });
+        }
         console.log("request => user_id : "+user_id);
         try {
             dbUserAccount.getConnection((error,con)=>{
@@ -104,6 +125,13 @@ class UserController {
 
     static async getUserByEmail(req, res) {
         const { email } = req.body;
+        //check request value type
+        if (typeof(email)!= "string"){
+            res.status(400).json({
+                error_code:400,
+                message:"type of 'email' isn't correct"
+            });
+        }
         console.log("request email : "+email);
         try {
             dbUserAccount.getConnection((err, con) => {
