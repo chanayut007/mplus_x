@@ -6,4 +6,8 @@ router.get('/login', UserController.getUserByEmail);
 
 router.get('/getUserInformation', UserController.getUserInformation);
 
+router.get('/getUserAccount', UserController.getUserAccount);
+
+router.get('/getLinkRef', UserController.getLinkRef);
+
 module.exports = router;

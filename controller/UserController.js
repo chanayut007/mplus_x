@@ -35,6 +35,73 @@ class UserController {
         
     }
 
+
+    static async getUserAccount(req, res){
+        const { user_id } = req.body;
+        console.log("request => user_id : "+user_id);
+        try {
+            dbUserAccount.getConnection((error,con)=>{
+                if(error){
+                    throw err;
+                }else{
+                    dbUserAccount.query("SELECT (ta.ta_login) as mt4_no, (ta.ta_group) as account_type,  ta.ta_balance as balance, (bwb.money_net) as money_net, (ta.ta_leverage) as leverage, (bua.user_fullname) as full_name ,ta.ta_password \n from reportserver.mt4_users mtu JOIN mt4.treder_account ta ON mtu.LOGIN = ta.ta_login , account.bk_user_account bua, wallet.bk_wallet_balance bwb \n where ta.user_id = ? && bua.user_id = ? && bwb.user_id = ?;", [user_id,user_id,user_id],
+                   
+                    (err, result, fields) => {
+                        if (err) {
+                            console.log(err);
+                            return res.status(400).json(err);
+                        }
+                        if (result.length == 0) {
+                            return res.status(200).json({
+                                message: "Can't find this user in database"
+                            });
+                        }
+                        return res.status(200).json(result);
+                    });
+                }
+
+            });
+            
+        } catch (error) {
+            console.log(error);
+            return res.status(500).json();
+        }
+        
+    }
+
+    static async getLinkRef(req, res){
+        const { user_id } = req.body;
+        console.log("request => user_id : "+user_id);
+        try {
+            dbUserAccount.getConnection((error,con)=>{
+                if(error){
+                    throw err;
+                }else{
+                    dbUserAccount.query("SELECT (concat(\'https://www.mplusfx.com/ref=\',buc.user_refname)) as link_ref ,(bwb.commission_market) as commission FROM wallet.bk_wallet_balance bwb, account.bk_user_account buc \n WHERE bwb.user_id = ? && buc.user_id = ?;", [user_id,user_id],
+                   
+                    (err, result, fields) => {
+                        if (err) {
+                            console.log(err);
+                            return res.status(400).json(err);
+                        }
+                        if (result.length == 0) {
+                            return res.status(200).json({
+                                message: "Can't find this user in database"
+                            });
+                        }
+                        return res.status(200).json(result);
+                    });
+                }
+
+            });
+            
+        } catch (error) {
+            console.log(error);
+            return res.status(500).json();
+        }
+        
+    }
+
     static async getUserByEmail(req, res) {
         const { email } = req.body;
         console.log("request email : "+email);
