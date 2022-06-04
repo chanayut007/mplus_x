@@ -1,7 +1,7 @@
 const config = {
     ports: process.env.PORT || 3000,
     dbUserAccount: {
-        // connectionLimit: 10,
+        connectionLimit: 10,
         host: 'localhost',
         user: 'root',
         password: '',

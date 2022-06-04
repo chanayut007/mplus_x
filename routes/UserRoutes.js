@@ -1,13 +1,15 @@
 const express = require('express');
-const UserController = require('../controller/UserController');
+const UserEventRouter = require('./eventRouters/UserEventRouter');
 const router = express.Router();
 
-router.get('/login', UserController.getUserByEmail);
+router.get('/login', UserEventRouter.getLoginByEmail);
 
-router.get('/getUserInformation', UserController.getUserInformation);
+router.get('/getUserInformation', UserEventRouter.getUserInformation);
 
-router.get('/getUserAccount', UserController.getUserAccount);
+router.get('/getUserAccount', UserEventRouter.getUserAccount);
 
-router.get('/getLinkRef', UserController.getLinkRef);
+router.get('/getLinkRef', UserEventRouter.getLinkRef);
+
+router.get('/logout', UserEventRouter.logout);
 
 module.exports = router;

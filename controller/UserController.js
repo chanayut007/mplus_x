@@ -1,164 +1,103 @@
-const dbUserAccount = require('../services/dbConnection');
+const UserService = require('../services/UserService');
+const http = require('../constants/http');
+const transformResponseUtil = require('../utils/TransformResponseUtil');
+const ApplicationError = require('../model/error/ApplicationError');
 
 class UserController {
 
-    static async getUserInformation(req, res){
+    async getUserInformation(req) {
         const { user_id } = req.body;
         //check request value type
-        if (typeof(user_id)!= "number"){
-            res.status(400).json({
-                error_code:400,
-                message:"type of 'user_id' isn't correct"
-            });
+        if (typeof user_id !== "number"){
+            throw new ApplicationError(http.HTTP_CLIENT_ERROR_CODE, http.HTTP_CLIENT_ERROR_USER_REQUIRED_MSG);
         }
         console.log("request user_id : "+user_id);
         try {
-            dbUserAccount.getConnection((error,con)=>{
-                if(error){
-                    throw err;
-                }else{
-                    dbUserAccount.query("SELECT  user_id, user_fullname, \n (concat(d_code_phone,substr(user_phone,2))) as mobile_no, \n user_email, concat(concat(concat(substr(user_birthday,9),\'/\') , concat(substr(user_birthday,6,2),\'/\') ) , substr(user_birthday,1,4)) as user_birthday,\n user_sex, user_nationality,concat(concat(concat(concat(user_address,\" \"),concat(user_state,\" \")) , concat(user_city,\" \")),user_zipcode) as address \n from account.bk_user_account buc \n where buc.user_id = ?", [user_id],
-                   
-                    (err, result, fields) => {
-                        if (err) {
-                            console.log(err);
-                            return res.status(400).json(err);
-                        }
-                        if (result.length == 0) {
-                            return res.status(200).json({
-                                message: "Can't find this user in database"
-                            });
-                        }
-                        return res.status(200).json(result);
-                    });
-                }
-
-            });
-            
+            let result = await UserService.getUserInformation(user_id);
+            return result;
         } catch (error) {
-            console.log(error);
-            return res.status(500).json();
+            if (error.statusCode) {
+                throw new ApplicationError(error.statusCode, error.msg, error.stack);
+            }
+            throw new ApplicationError(http.HTTP_INTERNAL_SERVER_CODE, http.HTTP_INTERNAL_SERVER_CODE, http.HTTP_INTERNAL_SERVER_MSG, error);
         }
         
     }
 
-
-    static async getUserAccount(req, res){
+    async getUserAccount(req) {
         const { user_id } = req.body;
         //check request value type
-        if (typeof(user_id)!= "number"){
-            res.status(400).json({
-                error_code:400,
-                message:"type of 'user_id' isn't correct"
-            });
+        if (typeof user_id !== "number"){
+            throw new ApplicationError(http.HTTP_CLIENT_ERROR_CODE, http.HTTP_CLIENT_ERROR_USER_REQUIRED_MSG);
         }
         console.log("request => user_id : "+user_id);
         try {
-            dbUserAccount.getConnection((error,con)=>{
-                if(error){
-                    throw err;
-                }else{
-                    dbUserAccount.query("SELECT (ta.ta_login) as mt4_no, (ta.ta_group) as account_type,  ta.ta_balance as balance, (bwb.money_net) as money_net, (ta.ta_leverage) as leverage, (bua.user_fullname) as full_name ,ta.ta_password \n from reportserver.mt4_users mtu JOIN mt4.treder_account ta ON mtu.LOGIN = ta.ta_login , account.bk_user_account bua, wallet.bk_wallet_balance bwb \n where ta.user_id = ? && bua.user_id = ? && bwb.user_id = ?;", [user_id,user_id,user_id],
-                   
-                    (err, result, fields) => {
-                        if (err) {
-                            console.log(err);
-                            return res.status(400).json(err);
-                        }
-                        if (result.length == 0) {
-                            return res.status(200).json({
-                                message: "Can't find this user in database"
-                            });
-                        }
-                        return res.status(200).json(result);
-                    });
-                }
-
-            });
-            
+            let result = await UserService.getUserAccount(user_id);
+            return result;
         } catch (error) {
-            console.log(error);
-            return res.status(500).json();
+            console.log('Exception: ', error);
+            if (error.statusCode) {
+                throw new ApplicationError(error.statusCode, error.msg, error.stack);
+            }
+            throw new ApplicationError(http.HTTP_INTERNAL_SERVER_CODE, http.HTTP_INTERNAL_SERVER_CODE, http.HTTP_INTERNAL_SERVER_MSG, error);
         }
-        
     }
 
-    static async getLinkRef(req, res){
+    async getLinkRef(req) {
         const { user_id } = req.body;
         //check request value type
-        if (typeof(user_id)!= "number"){
-            res.status(400).json({
-                error_code:400,
-                message:"type of 'user_id' isn't correct"
-            });
+        if (typeof user_id !== "number"){
+            throw new ApplicationError(http.HTTP_CLIENT_ERROR_CODE, http.HTTP_CLIENT_ERROR_USER_REQUIRED_MSG);
         }
-        console.log("request => user_id : "+user_id);
         try {
-            dbUserAccount.getConnection((error,con)=>{
-                if(error){
-                    throw err;
-                }else{
-                    dbUserAccount.query("SELECT (concat(\'https://www.mplusfx.com/ref=\',buc.user_refname)) as link_ref ,(bwb.commission_market) as commission FROM wallet.bk_wallet_balance bwb, account.bk_user_account buc \n WHERE bwb.user_id = ? && buc.user_id = ?;", [user_id,user_id],
-                   
-                    (err, result, fields) => {
-                        if (err) {
-                            console.log(err);
-                            return res.status(400).json(err);
-                        }
-                        if (result.length == 0) {
-                            return res.status(200).json({
-                                message: "Can't find this user in database"
-                            });
-                        }
-                        return res.status(200).json(result);
-                    });
-                }
-
-            });
-            
+            let result = await UserService.getLinkRef(user_id);
+            return result;
         } catch (error) {
-            console.log(error);
-            return res.status(500).json();
+            console.log('Exception: ', error);
+            if (error.statusCode) {
+                throw new ApplicationError(error.statusCode, error.msg, error.stack);
+            }
+            throw new ApplicationError(http.HTTP_INTERNAL_SERVER_CODE, http.HTTP_INTERNAL_SERVER_MSG, error);
         }
-        
     }
 
-    static async getUserByEmail(req, res) {
-        const { email } = req.body;
-        //check request value type
-        if (typeof(email)!= "string"){
-            res.status(400).json({
-                error_code:400,
-                message:"type of 'email' isn't correct"
-            });
-        }
-        console.log("request email : "+email);
+    async getLoginByEmail(req) {
+        const { email, password } = req.body;
         try {
-            dbUserAccount.getConnection((err, con) => {
-                if (err) {
-                    throw err;
-                } else {
-                    dbUserAccount.query('SELECT * FROM account.bk_user_account WHERE user_email = ?', [email],
-                   
-                    (err, result, fields) => {
-                        if (err) {
-                            console.log(err);
-                            return res.status(400).json(err);
-                        }
-                        if (result.length == 0) {
-                            return res.status(200).json({
-                                message: "Can't find this user in database"
-                            });
-                        }
-                        return res.status(200).json(result);
-                    });
-                }
-            });
+            //check request value type
+            if (!email || !password) {
+                throw new ApplicationError(http.HTTP_CLIENT_ERROR_CODE,  http.HTTP_CLIENT_ERROR_LOGIN_REQUIRED_MSG);
+            }
+            else if (typeof email !== "string"){
+                throw new ApplicationError(http.HTTP_CLIENT_ERROR_CODE, http.HTTP_CLIENT_ERROR_EMAIL_REQUIRED_MSG);
+            }
+            else if (typeof password !== "string") {
+                throw new ApplicationError(http.HTTP_CLIENT_ERROR_CODE, http.HTTP_CLIENT_ERROR_PASSWORD_REQUIRED_MSG);
+            }
+            let result = await UserService.getLoginUserByEmail(email, password);
+            return transformResponseUtil.toResponseSuccessWithData(http.HTTP_SUCCESS_CODE, http.HTTP_SUCCESS_MSG, result);
         } catch (error) {
-            console.log(error);
-            return res.status(500).json(error);
+            console.log('Exception: ', error);
+            if (error.statusCode) {
+                throw new ApplicationError(error.statusCode, error.msg, error.stack);
+            }
+            throw new ApplicationError(http.HTTP_INTERNAL_SERVER_CODE, http.HTTP_INTERNAL_SERVER_MSG, error);
         }
     }
+
+    async logout() {
+        try {
+            let result = await UserService.logout();
+            return transformResponseUtil.toResponseSuccessWithData(http.HTTP_SUCCESS_CODE, http.HTTP_SUCCESS_MSG, result);
+        } catch (error) {
+            console.log('Exception: ', error);
+            if (error.statusCode) {
+                throw new ApplicationError(error.statusCode, error.msg, error.stack);
+            }
+            throw new ApplicationError(http.HTTP_INTERNAL_SERVER_CODE, http.HTTP_INTERNAL_SERVER_MSG, error);
+        }
+    }
+    
 }
 
-module.exports = UserController;
+module.exports = new UserController();
