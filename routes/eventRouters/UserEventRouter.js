@@ -15,8 +15,38 @@ class UserEventRouter {
                 res.status(error.statusCode).send(error);
             }
             res.status(http.HTTP_INTERNAL_SERVER_CODE).send(
-                transformResponseUtil.toResponseError(new ApplicationError(http.HTTP_INTERNAL_SERVER_CODE, http.HTTP_INTERNAL_SERVER_CODE, http.HTTP_INTERNAL_SERVER_MSG))
+                transformResponseUtil.toResponseError(new ApplicationError(http.HTTP_INTERNAL_SERVER_CODE, http.HTTP_INTERNAL_SERVER_CODE, http.HTTP_CLIENT_ERROR_MSG_INVALID_DATA_FORMAT))
             );
+        }
+    }
+
+
+    async getUserPin(req, res) {
+        try {
+            console.log(req.body);
+            let responseSuccess = await UserController.getUserPin(req);
+            res.status(http.HTTP_SUCCESS_CODE).send(responseSuccess);
+        } catch (error) {
+            res.status(error.statusCode).send({
+                error_code : error.statusCode,
+                error_message  : error.msg,
+                // error_stack  : error.stack,
+
+            });
+        }
+    }
+    async saveUserPinCode (req, res) {
+        try {
+            console.log(req.body);
+            let responseSuccess = await UserController.saveUserPinCode(req);
+            res.status(http.HTTP_SUCCESS_CODE).send({
+                status : responseSuccess
+            });
+        } catch (error) {
+            res.status(error.statusCode).send({
+                error_code : error.statusCode,
+                error_message  : error.msg,
+            });
         }
     }
 
@@ -26,13 +56,26 @@ class UserEventRouter {
             let responseSuccess = await UserController.getUserInformation(req);
             res.status(http.HTTP_SUCCESS_CODE).send(responseSuccess);
         } catch (error) {
-            console.log('UserEventRouter.getUserInformation() error: ', error);
-            if (error.statusCode) {
-                res.status(error.statusCode).send(error);
-            }
-            res.status(http.HTTP_INTERNAL_SERVER_CODE).send(
-                transformResponseUtil.toResponseError(new ApplicationError(http.HTTP_INTERNAL_SERVER_CODE, http.HTTP_INTERNAL_SERVER_CODE, http.HTTP_INTERNAL_SERVER_MSG))
-            );
+            res.status(error.statusCode).send({
+                error_code : error.statusCode,
+                error_message  : error.msg,
+                error_stack  : error.stack,
+
+            });
+        
+            // console.log('UserEventRouter.getUserInformation() error: ', error);
+            // console.log(error);
+            // console.log(error.statusCode);
+            // if (error.statusCode) {
+            //     res.status(error.statusCode).send(error);
+            // }
+            // else {
+            //     res.status(http.HTTP_INTERNAL_SERVER_CODE).send({
+            //         message : transformResponseUtil.toResponseError(new ApplicationError(http.HTTP_INTERNAL_SERVER_CODE, http.HTTP_INTERNAL_SERVER_CODE, http.HTTP_INTERNAL_SERVER_MSG));
+            //     }
+                   
+            //     );
+            // }
         }
     }
 
@@ -40,15 +83,19 @@ class UserEventRouter {
         try {
             console.log(req.body);
             let responseSuccess = await UserController.getUserAccount(req);
+            console.log("responseSuccess : "+responseSuccess);
             res.status(http.HTTP_SUCCESS_CODE).send(responseSuccess);
         } catch (error) {
             console.log('UserEventRouter.getUserAccount() error: ', error);
             if (error.statusCode) {
                 res.status(error.statusCode).send(error);
             }
-            res.status(http.HTTP_INTERNAL_SERVER_CODE).send(
-                transformResponseUtil.toResponseError(new ApplicationError(http.HTTP_INTERNAL_SERVER_CODE, http.HTTP_INTERNAL_SERVER_CODE, http.HTTP_INTERNAL_SERVER_MSG))
-            );
+            else {
+                res.status(http.HTTP_INTERNAL_SERVER_CODE).send(
+                    transformResponseUtil.toResponseError(new ApplicationError(http.HTTP_INTERNAL_SERVER_CODE, http.HTTP_INTERNAL_SERVER_CODE, http.HTTP_INTERNAL_SERVER_MSG))
+                );
+            }
+
         }
     }
 
@@ -62,9 +109,12 @@ class UserEventRouter {
             if (error.statusCode) {
                 res.status(error.statusCode).send(error);
             }
-            res.status(http.HTTP_INTERNAL_SERVER_CODE).send(
-                transformResponseUtil.toResponseError(new ApplicationError(http.HTTP_INTERNAL_SERVER_CODE, http.HTTP_INTERNAL_SERVER_CODE, http.HTTP_INTERNAL_SERVER_MSG))
-            );
+            else {
+                res.status(http.HTTP_INTERNAL_SERVER_CODE).send(
+                    transformResponseUtil.toResponseError(new ApplicationError(http.HTTP_INTERNAL_SERVER_CODE, http.HTTP_INTERNAL_SERVER_CODE, http.HTTP_INTERNAL_SERVER_MSG))
+                );
+            }
+
         }
     }
 
@@ -77,9 +127,12 @@ class UserEventRouter {
             if (error.statusCode) {
                 res.status(error.statusCode).send(error);
             }
-            res.status(http.HTTP_INTERNAL_SERVER_CODE).send(
-                transformResponseUtil.toResponseError(new ApplicationError(http.HTTP_INTERNAL_SERVER_CODE, http.HTTP_INTERNAL_SERVER_CODE, http.HTTP_INTERNAL_SERVER_MSG))
-            );
+            else {
+                res.status(http.HTTP_INTERNAL_SERVER_CODE).send(
+                    transformResponseUtil.toResponseError(new ApplicationError(http.HTTP_INTERNAL_SERVER_CODE, http.HTTP_INTERNAL_SERVER_CODE, http.HTTP_INTERNAL_SERVER_MSG))
+                );
+            }
+
         }
     }
 

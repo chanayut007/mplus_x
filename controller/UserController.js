@@ -8,18 +8,20 @@ class UserController {
     async getUserInformation(req) {
         const { user_id } = req.body;
         //check request value type
-        if (typeof user_id !== "number"){
-            throw new ApplicationError(http.HTTP_CLIENT_ERROR_CODE, http.HTTP_CLIENT_ERROR_USER_REQUIRED_MSG);
+        console.log("id type : "+ typeof user_id);
+        if (typeof user_id !== "number" || !(user_id > 0)){
+            console.log("bad request");
+            throw new ApplicationError(http.HTTP_CLIENT_ERROR_CODE, http.HTTP_CLIENT_ERROR_MSG_INVALID_DATA_FORMAT);
         }
-        console.log("request user_id : "+user_id);
         try {
             let result = await UserService.getUserInformation(user_id);
             return result;
         } catch (error) {
+            console.log('Get User Information Exception: ', error);
             if (error.statusCode) {
                 throw new ApplicationError(error.statusCode, error.msg, error.stack);
             }
-            throw new ApplicationError(http.HTTP_INTERNAL_SERVER_CODE, http.HTTP_INTERNAL_SERVER_CODE, http.HTTP_INTERNAL_SERVER_MSG, error);
+            throw new ApplicationError(http.HTTP_INTERNAL_SERVER_CODE, http.HTTP_CLIENT_ERROR_CODE_INVALID_DATA_FORMAT, http.HTTP_INTERNAL_SERVER_MSG, error);
         }
         
     }
@@ -27,19 +29,20 @@ class UserController {
     async getUserAccount(req) {
         const { user_id } = req.body;
         //check request value type
-        if (typeof user_id !== "number"){
-            throw new ApplicationError(http.HTTP_CLIENT_ERROR_CODE, http.HTTP_CLIENT_ERROR_USER_REQUIRED_MSG);
+        if (typeof user_id !== "number"|| !(user_id > 0)){
+            console.log("bad request");
+            throw new ApplicationError(http.HTTP_CLIENT_ERROR_CODE, http.HTTP_CLIENT_ERROR_MSG_INVALID_DATA_FORMAT);
         }
         console.log("request => user_id : "+user_id);
         try {
             let result = await UserService.getUserAccount(user_id);
             return result;
         } catch (error) {
-            console.log('Exception: ', error);
-            if (error.statusCode) {
-                throw new ApplicationError(error.statusCode, error.msg, error.stack);
-            }
-            throw new ApplicationError(http.HTTP_INTERNAL_SERVER_CODE, http.HTTP_INTERNAL_SERVER_CODE, http.HTTP_INTERNAL_SERVER_MSG, error);
+            console.log('Get User Account Exception: ', error);
+            // if (error.statusCode) {
+            //     throw new ApplicationError(error.statusCode, error.msg, error.stack);
+            // }
+            // throw new ApplicationError(http.HTTP_INTERNAL_SERVER_CODE, http.HTTP_INTERNAL_SERVER_CODE, http.HTTP_INTERNAL_SERVER_MSG, error);
         }
     }
 
@@ -96,6 +99,56 @@ class UserController {
             }
             throw new ApplicationError(http.HTTP_INTERNAL_SERVER_CODE, http.HTTP_INTERNAL_SERVER_MSG, error);
         }
+    }
+
+    async getUserPin(req) {
+        const { user_id } = req.body;
+        //check request value type
+        console.log("id type : "+ typeof user_id);
+        if (typeof user_id !== "number" || !(user_id > 0)){
+            console.log("bad request");
+            throw new ApplicationError(http.HTTP_CLIENT_ERROR_CODE, http.HTTP_CLIENT_ERROR_MSG_INVALID_DATA_FORMAT);
+        }
+        try {
+            let result = await UserService.getUserPin(user_id);
+            return result;
+        } catch (error) {
+            console.log('Get Pin Exception: ', error);
+            if (error.statusCode) {
+                throw new ApplicationError(error.statusCode, error.msg, error.stack);
+            }
+            throw new ApplicationError(http.HTTP_INTERNAL_SERVER_CODE, http.HTTP_CLIENT_ERROR_CODE_INVALID_DATA_FORMAT, http.HTTP_INTERNAL_SERVER_MSG, error);
+        }
+        
+    }
+
+    async saveUserPinCode(req) {
+
+        const { user_pin_code } = req.body;
+        const { user_id } = req.body;
+        
+        //check request value type
+        if (typeof user_id !== "number" || !(user_id > 0)){
+            console.log("bad request");
+            throw new ApplicationError(http.HTTP_CLIENT_ERROR_CODE, http.HTTP_CLIENT_ERROR_MSG_INVALID_DATA_FORMAT);
+        }
+
+        if (user_pin_code.length != 6 || !isNaN(user_pin_code)){
+            console.log("bad request");
+            throw new ApplicationError(http.HTTP_CLIENT_ERROR_CODE, http.HTTP_CLIENT_ERROR_MSG_INVALID_DATA_FORMAT);
+        }
+
+        try {
+            let result = await UserService.saveUserPinCode(user_pin_code,user_id);
+            return result;
+        } catch (error) {
+            console.log('save user pin code exception: ', error);
+            if (error.statusCode) {
+                throw new ApplicationError(error.statusCode, error.msg, error.stack);
+            }
+            throw new ApplicationError(http.HTTP_INTERNAL_SERVER_CODE, http.HTTP_CLIENT_ERROR_CODE_INVALID_DATA_FORMAT, http.HTTP_INTERNAL_SERVER_MSG, error);
+        }
+        
     }
     
 }

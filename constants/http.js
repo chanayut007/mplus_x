@@ -6,6 +6,8 @@ module.exports = {
     HTTP_INTERNAL_SERVER_MSG: "INTERNAL SERVER ERROR",
 
     HTTP_CLIENT_ERROR_CODE: 400,
+    HTTP_CLIENT_ERROR_CODE_INVALID_DATA_FORMAT:"Bad Request",
+    HTTP_CLIENT_ERROR_MSG_INVALID_DATA_FORMAT: "Invalid data format",
     HTTP_CLIENT_ERROR_LOGIN_REQUIRED_MSG: "Please enter your email and password",
     HTTP_CLIENT_ERROR_EMAIL_REQUIRED_MSG: "type of 'email' isn't correct",
     HTTP_CLIENT_ERROR_PASSWORD_REQUIRED_MSG: "type of 'password' isn't correct",

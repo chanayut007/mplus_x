@@ -8,17 +8,16 @@ class UserService {
     async getUserInformation(userId) {
         try { 
             let result = await UserRepository.getUserInformation(userId);
-            if (data.length == 0) {
-                throw new ApplicationError(http.HTTP_CLIENT_ERROR_CODE, http.HTTP_CLIENT_ERROR_USER_DATA_MSG);
+            if (result.length == 0) {
+                throw new ApplicationError(http.HTTP_INTERNAL_SERVER_CODE, http.HTTP_CLIENT_ERROR_USER_DATA_MSG);
             }
             return result[0];
         } catch (error) {
-            console.log('UserService.getUserInformation() Exception: ', error);
-            if (error.statusCode) {
-                console.log(error);
-                throw new ApplicationError(error.statusCode, error.msg, error.stack);
-            }
-            throw new ApplicationError(http.HTTP_INTERNAL_SERVER_CODE, http.HTTP_INTERNAL_SERVER_MSG, error);
+            //console.log('UserService.getUserInformation() Exception: ', error);
+            // if (error.statusCode) {
+            //     throw new ApplicationError(error.statusCode, error.msg, error.stack);
+            // }
+            throw new ApplicationError(http.HTTP_INTERNAL_SERVER_CODE, http.HTTP_INTERNAL_SERVER_MSG, error.stack);
         }
     }
 
@@ -98,6 +97,7 @@ class UserService {
             throw new ApplicationError(HTTP_INTERNAL_SERVER_CODE, http.HTTP_INTERNAL_SERVER_MSG, error);
         }
     }
+    
 
     async logout() {
         try {
@@ -111,6 +111,47 @@ class UserService {
             throw new ApplicationError(HTTP_INTERNAL_SERVER_CODE, http.HTTP_INTERNAL_SERVER_MSG, error);
         }
     }
+
+
+    async getUserPin(userId) {
+        try {
+            let result = await UserRepository.getUserPin(userId);
+            if (result.length == 0) {
+                throw new ApplicationError(http.HTTP_CLIENT_ERROR_CODE, http.HTTP_CLIENT_ERROR_USER_DATA_MSG);
+            }
+            return result[0];
+        } catch (error) {
+            console.log('UserService get user pin exception: ', error);
+            if (error.statusCode) {
+                console.log(err);
+                throw new ApplicationError(error.statusCode, error.msg, error.stack);
+            }
+            throw new ApplicationError(http.HTTP_INTERNAL_SERVER_CODE, http.HTTP_INTERNAL_SERVER_MSG, error);
+        }
+    }
+
+    async saveUserPinCode(user_pin_code,userId) {
+        try {
+            let result = await UserRepository.saveUserPinCode(user_pin_code,userId);
+            if (result.length == 0) {
+                throw new ApplicationError(http.HTTP_CLIENT_ERROR_CODE, http.HTTP_CLIENT_ERROR_USER_DATA_MSG);
+            }
+            return "succesfully";
+        } catch (error) {
+            console.log('UserService save user pin code exception: ', error);
+            if (error.statusCode) {
+                console.log(error);
+                throw new ApplicationError(error.statusCode, error.msg, error.stack);
+            }
+            throw new ApplicationError(http.HTTP_INTERNAL_SERVER_CODE, http.HTTP_INTERNAL_SERVER_MSG, error);
+        }
+    }
+
+    // checkPin(pin) {
+
+    //     return true;
+    // }
+
 }
 
 module.exports = new UserService();

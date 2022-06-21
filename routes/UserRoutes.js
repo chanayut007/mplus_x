@@ -4,6 +4,10 @@ const router = express.Router();
 
 router.get('/login', UserEventRouter.getLoginByEmail);
 
+router.get('/getUserPin', UserEventRouter.getUserPin);
+
+router.get('/saveUserPinCode', UserEventRouter.saveUserPinCode);
+
 router.get('/getUserInformation', UserEventRouter.getUserInformation);
 
 router.get('/getUserAccount', UserEventRouter.getUserAccount);
