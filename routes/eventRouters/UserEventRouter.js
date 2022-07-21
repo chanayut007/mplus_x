@@ -24,12 +24,18 @@ class UserEventRouter {
     async getUserPin(req, res) {
         try {
             console.log(req.body);
-            let responseSuccess = await UserController.getUserPin(req);
-            res.status(http.HTTP_SUCCESS_CODE).send(responseSuccess);
+            let data = await UserController.getUserPin(req);
+            res.status(http.HTTP_SUCCESS_CODE).send({
+                responseCode : 200,
+                responseMessage : "SUCCESS",
+                data
+            });
         } catch (error) {
+            console.log("error : "+error);
             res.status(error.statusCode).send({
-                error_code : error.statusCode,
-                error_message  : error.msg,
+                responseCode : error.statusCode,
+                responseMessage : error.msg,
+                data :[]
                 // error_stack  : error.stack,
 
             });
@@ -40,6 +46,7 @@ class UserEventRouter {
             console.log(req.body);
             let responseSuccess = await UserController.saveUserPinCode(req);
             res.status(http.HTTP_SUCCESS_CODE).send({
+                responseCode : 200,
                 status : responseSuccess
             });
         } catch (error) {
@@ -62,20 +69,6 @@ class UserEventRouter {
                 error_stack  : error.stack,
 
             });
-        
-            // console.log('UserEventRouter.getUserInformation() error: ', error);
-            // console.log(error);
-            // console.log(error.statusCode);
-            // if (error.statusCode) {
-            //     res.status(error.statusCode).send(error);
-            // }
-            // else {
-            //     res.status(http.HTTP_INTERNAL_SERVER_CODE).send({
-            //         message : transformResponseUtil.toResponseError(new ApplicationError(http.HTTP_INTERNAL_SERVER_CODE, http.HTTP_INTERNAL_SERVER_CODE, http.HTTP_INTERNAL_SERVER_MSG));
-            //     }
-                   
-            //     );
-            // }
         }
     }
 
@@ -105,15 +98,15 @@ class UserEventRouter {
             let responseSuccess = await UserController.getLinkRef(req);
             res.status(http.HTTP_SUCCESS_CODE).send(responseSuccess);
         } catch (error) {
-            console.log('UserEventRouter.getLinkRef() error: ', error);
-            if (error.statusCode) {
+            // console.log('UserEventRouter.getLinkRef() error: ', error);
+            // if (error.statusCode) {
                 res.status(error.statusCode).send(error);
-            }
-            else {
-                res.status(http.HTTP_INTERNAL_SERVER_CODE).send(
-                    transformResponseUtil.toResponseError(new ApplicationError(http.HTTP_INTERNAL_SERVER_CODE, http.HTTP_INTERNAL_SERVER_CODE, http.HTTP_INTERNAL_SERVER_MSG))
-                );
-            }
+            // }
+            // else {
+            //     res.status(http.HTTP_INTERNAL_SERVER_CODE).send(
+            //         transformResponseUtil.toResponseError(new ApplicationError(http.HTTP_INTERNAL_SERVER_CODE, http.HTTP_INTERNAL_SERVER_CODE, http.HTTP_INTERNAL_SERVER_MSG))
+            //     );
+            // }
 
         }
     }

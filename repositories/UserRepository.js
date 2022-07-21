@@ -37,7 +37,6 @@ class UserRepository {
                 });
             });
         } catch (error) {
-            console.log('User repository => get user pin exception: ', error);
             throw new ApplicationError(http.HTTP_INTERNAL_SERVER_CODE, http.HTTP_INTERNAL_SERVER_MSG, error);
         }
     }

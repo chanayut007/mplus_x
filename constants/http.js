@@ -22,5 +22,12 @@ module.exports = {
     HTTP_UNAUTHORIZE_ERROR_MSG: "UnAuthorization",
 
     HTTP_FORBIDDEN_ERROR_CODE: 403,
-    HTTP_FORBIDDEN_ERROR_MSG: "ไม่มีสิทธิ์ในการเข้าถึง Api นี้"
+    HTTP_FORBIDDEN_ERROR_MSG: "ไม่มีสิทธิ์ในการเข้าถึง Api นี้",
+
+    HTTP_APPROVE_MESSAGE : "Approve" ,
+    HTTP_INVALID_AUTH_MESSAGE : "Invalid Authentication",
+    HTTP_INVALID_EMAIL_MESSAGE : "Invalid Email",
+    HTTP_INVALID_PASS_MESSAGE : "Invalid Pass",
+    HTTP_INVALID_MOBILE_NO_MESSAGE : "Invalid mobile no" ,
+    HTTP_NOT_FOUND_MESSAGE :  "Not Found" ,
 }

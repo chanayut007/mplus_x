@@ -9,14 +9,11 @@ class UserService {
         try { 
             let result = await UserRepository.getUserInformation(userId);
             if (result.length == 0) {
-                throw new ApplicationError(http.HTTP_INTERNAL_SERVER_CODE, http.HTTP_CLIENT_ERROR_USER_DATA_MSG);
+                throw new ApplicationError(http.HTTP_NOT_FOUND_CODE, http.HTTP_NOT_FOUND_MESSAGE);
             }
             return result[0];
         } catch (error) {
-            //console.log('UserService.getUserInformation() Exception: ', error);
-            // if (error.statusCode) {
-            //     throw new ApplicationError(error.statusCode, error.msg, error.stack);
-            // }
+            console.log("error"+error);
             throw new ApplicationError(http.HTTP_INTERNAL_SERVER_CODE, http.HTTP_INTERNAL_SERVER_MSG, error.stack);
         }
     }
@@ -26,6 +23,7 @@ class UserService {
             let data = await UserRepository.getUserAccount(userId);
             if (data.length == 0) {
                 return {
+                    "error_message": "Not Found",
                     "wallet": null,
                     "accounts": []
                 };
@@ -61,16 +59,16 @@ class UserService {
         try {
             let result = await UserRepository.getLinkRef(userId);
             if (result.length == 0) {
-                throw new ApplicationError(http.HTTP_CLIENT_ERROR_CODE, http.HTTP_CLIENT_ERROR_USER_DATA_MSG);
+                throw new ApplicationError(http.HTTP_INTERNAL_SERVER_CODE, http.HTTP_NOT_FOUND_MESSAGE);
             }
             return result[0];
         } catch (error) {
             console.log('UserService.getUserAccount() Exception: ', error);
-            if (error.statusCode) {
-                console.log(err);
+            // if (error.statusCode) {
+            //     console.log(err);
                 throw new ApplicationError(error.statusCode, error.msg, error.stack);
-            }
-            throw new ApplicationError(http.HTTP_INTERNAL_SERVER_CODE, http.HTTP_INTERNAL_SERVER_MSG, error);
+            // }
+            // throw new ApplicationError(http.HTTP_INTERNAL_SERVER_CODE, http.HTTP_INTERNAL_SERVER_MSG, error);
         }
     }
 
@@ -78,14 +76,14 @@ class UserService {
         try {
             let result = await UserRepository.getUserByEmail(email);
             if (result.length == 0) {
-                throw new ApplicationError(http.HTTP_CLIENT_ERROR_CODE, http.HTTP_CLIENT_ERROR_USER_DATA_MSG);
+                throw new ApplicationError(http.HTTP_INVALID_AUTH_CODE, http.HTTP_INVALID_AUTH_MESSAGE);
             }
             const userData = result[0];
             let { user_pass } = userData;
 
             const passwordHash = user_pass.replace('$2y$', '$2a$');
             if (!(await bcrypt.compare(password, passwordHash))) {
-                throw new ApplicationError(http.HTTP_CLIENT_ERROR_CODE, http.HTTP_CLIENT_ERROR_LOGIN_INVALID_MSG);
+                throw new ApplicationError(http.HTTP_INVALID_PASS_CODE, http.HTTP_INVALID_PASS_MESSAGE);
             }
             return true;
         } catch (error) {
@@ -117,16 +115,11 @@ class UserService {
         try {
             let result = await UserRepository.getUserPin(userId);
             if (result.length == 0) {
-                throw new ApplicationError(http.HTTP_CLIENT_ERROR_CODE, http.HTTP_CLIENT_ERROR_USER_DATA_MSG);
+                throw new ApplicationError(http.HTTP_SUCCESS_CODE, http.HTTP_NOT_FOUND_MESSAGE);
             }
             return result[0];
         } catch (error) {
-            console.log('UserService get user pin exception: ', error);
-            if (error.statusCode) {
-                console.log(err);
                 throw new ApplicationError(error.statusCode, error.msg, error.stack);
-            }
-            throw new ApplicationError(http.HTTP_INTERNAL_SERVER_CODE, http.HTTP_INTERNAL_SERVER_MSG, error);
         }
     }
 
