@@ -6,7 +6,8 @@ const ApplicationError = require('../model/error/ApplicationError');
 class UserController {
 
     async getUserInformation(req) {
-        const { user_id } = req.body;
+        // const { user_id } = req.body;
+        var user_id = parseInt(req.query.user_id);
         //check request value type
         if (typeof user_id !== "number" || !(user_id > 0)){
             console.log("bad request");
@@ -26,7 +27,8 @@ class UserController {
     }
 
     async getUserAccount(req) {
-        const { user_id } = req.body;
+        // const { user_id } = req.body;
+        var user_id = parseInt(req.query.user_id);
         //check request value type
         if (typeof user_id !== "number"|| !(user_id > 0)){
             console.log("bad request");
@@ -46,7 +48,8 @@ class UserController {
     }
 
     async getLinkRef(req) {
-        const { user_id } = req.body;
+        // const { user_id } = req.body;
+        var user_id = parseInt(req.query.user_id);
         //check request value type
         if (typeof user_id !== "number"){
             throw new ApplicationError(http.HTTP_CLIENT_ERROR_CODE, http.HTTP_CLIENT_ERROR_USER_REQUIRED_MSG);
@@ -101,7 +104,9 @@ class UserController {
     }
 
     async getUserPin(req) {
-        const { user_id } = req.body;
+        // const { user_id } = req;
+        var user_id = parseInt(req.query.user_id);
+        console.log("user_id : "+user_id);
         //check request value type
         console.log("id type : "+ typeof user_id);
         if (typeof user_id !== "number" || !(user_id > 0)){
