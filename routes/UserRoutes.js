@@ -16,4 +16,6 @@ router.get('/getLinkRef', UserEventRouter.getLinkRef);
 
 router.post('/logout', UserEventRouter.logout);
 
+router.get('/getSignal',UserEventRouter.getSignal);
+
 module.exports = router;

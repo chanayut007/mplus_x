@@ -153,6 +153,19 @@ class UserController {
         }
         
     }
+
+    async getSignal() {
+        try {
+            let result = await UserService.getSignal();
+            return transformResponseUtil.toResponseSuccessWithData(http.HTTP_SUCCESS_CODE, http.HTTP_SUCCESS_MSG, result);
+        } catch (error) {
+            console.log('Exception: ', error);
+            // if (error.statusCode) {
+            //     throw new ApplicationError(error.statusCode, error.msg, error.stack);
+            // }
+            throw new ApplicationError(http.HTTP_INTERNAL_SERVER_CODE, http.HTTP_INTERNAL_SERVER_MSG, error);
+        }
+    }
     
 }
 

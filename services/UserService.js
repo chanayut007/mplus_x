@@ -2,6 +2,8 @@ const UserRepository = require('../repositories/UserRepository');
 const bcrypt = require('bcrypt');
 const ApplicationError = require('../model/error/ApplicationError');
 const http = require('../constants/http');
+//googleapis
+const { google } = require("googleapis");
 
 class UserService {
 
@@ -140,10 +142,39 @@ class UserService {
         }
     }
 
-    // checkPin(pin) {
+    async getSignal(){
+        console.log("Started get spread sheet !!");
+        try{
+            const auth = new google.auth.GoogleAuth({
+                keyFile: "config/sheet-key.json", //the key file
+                scopes: "https://www.googleapis.com/auth/spreadsheets", //url to spreadsheets API
+            });
+            //Auth client Object
+            const authClientObject = await auth.getClient();
 
-    //     return true;
-    // }
+            //Google sheets instance
+            const googleSheetsInstance = google.sheets({ version: "v4", auth: authClientObject });
+
+            // spreadsheet id
+            const spreadsheetId = "1Jpt29oJGu3osJF8kO3GoO1aP5HBJZV9PTJCIVOYm6JE";
+
+            //Read front the spreadsheet
+            const readData = await googleSheetsInstance.spreadsheets.values.get({
+                auth, //auth object
+                spreadsheetId, // spreadsheet id
+                range: "แผ่น1!A2:F29", //range of cells to read from.
+            })
+
+            //send the data reae with the response
+            return readData.data;
+
+
+        }catch(error){
+            console.log(error);
+        }
+
+    }
+
 
 }
 

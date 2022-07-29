@@ -129,6 +129,15 @@ class UserEventRouter {
         }
     }
 
+    async getSignal(req,res) {
+        try {
+            let responseSuccess = await UserController.getSignal();
+            res.status(http.HTTP_SUCCESS_CODE).send(responseSuccess);
+        } catch (error) {
+                res.status(error.statusCode).send(error);
+        }
+    }
+
 }
 
 module.exports = new UserEventRouter();
