@@ -131,7 +131,7 @@ class UserController {
         
         //check request value type
 
-        if (typeof user_id !== "number" || !(user_id > 0)){
+        if (typeof user_id !== "string" || !(user_id > 0)){
             console.log("bad request");
             throw new ApplicationError(http.HTTP_CLIENT_ERROR_CODE, http.HTTP_CLIENT_ERROR_MSG_INVALID_DATA_FORMAT);
         }
