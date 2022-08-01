@@ -166,16 +166,32 @@ class UserService {
             })
 
             //send the data reae with the response
-            return readData.data;
+            // return readData.data.values;
 
+            var column = ["currency","pivot","resistance_1","resistance_2","support_1","support_2"];
+
+            var listOfData = readData.data.values;
+            var listOfResult =[];
+            listOfData.forEach(data => {
+                var row = {};
+                row[column[0]] = data[0];
+                row[column[1]] = data[1];
+                row[column[2]] = data[2];
+                row[column[3]] = data[3];
+                row[column[4]] = data[4];
+                row[column[5]] = data[5];
+                
+
+                listOfResult.push(row);
+            });
+
+            return listOfResult;
 
         }catch(error){
             console.log(error);
+            throw new ApplicationError(http.HTTP_INTERNAL_SERVER_CODE, http.HTTP_INTERNAL_SERVER_MSG, error);
         }
-
     }
-
-
 }
 
 module.exports = new UserService();
