@@ -74,10 +74,10 @@ class UserController {
                 throw new ApplicationError(http.HTTP_CLIENT_ERROR_CODE,  http.HTTP_CLIENT_ERROR_LOGIN_REQUIRED_MSG);
             }
             else if (typeof email !== "string"){
-                throw new ApplicationError(http.HTTP_INVALID_EMAIL_CODE, http. HTTP_INVALID_EMAIL_MESSAGE);
+                throw new ApplicationError(http.HTTP_CLIENT_ERROR_CODE, http. HTTP_INVALID_EMAIL_MESSAGE);
             }
             else if (typeof password !== "string") {
-                throw new ApplicationError(http.HTTP_INVALID_PASS_CODE, http.HTTP_INVALID_PASS_MESSAGE);
+                throw new ApplicationError(http.HTTP_CLIENT_ERROR_CODE, http.HTTP_INVALID_PASS_MESSAGE);
             }
             let result = await UserService.getLoginUserByEmail(email, password);
             return transformResponseUtil.toResponseSuccessWithData(http.HTTP_SUCCESS_CODE, http.HTTP_SUCCESS_MSG, result);
@@ -131,7 +131,7 @@ class UserController {
         
         //check request value type
 
-        if (typeof user_id !== "string" || !(user_id > 0)){
+        if (typeof user_id !== "string"){
             console.log("bad request");
             throw new ApplicationError(http.HTTP_CLIENT_ERROR_CODE, http.HTTP_CLIENT_ERROR_MSG_INVALID_DATA_FORMAT);
         }

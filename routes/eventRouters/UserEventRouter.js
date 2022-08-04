@@ -132,7 +132,15 @@ class UserEventRouter {
     async getSignal(req,res) {
         try {
             let responseSuccess = await UserController.getSignal();
-            res.status(http.HTTP_SUCCESS_CODE).send(responseSuccess);
+            var today = new Date();
+            var date =  today.getDate()+'/'+ (today.getMonth()+1) + '/' + today.getFullYear();
+            res.status(http.HTTP_SUCCESS_CODE).send({
+                statusCode : responseSuccess.statusCode,
+                statusCode : responseSuccess.statusMessage,
+                signal_date : date,
+                result : responseSuccess.getResult
+                
+            });
         } catch (error) {
                 res.status(error.statusCode).send(error);
         }

@@ -11,7 +11,7 @@ class UserService {
         try { 
             let result = await UserRepository.getUserInformation(userId);
             if (result.length == 0) {
-                throw new ApplicationError(http.HTTP_NOT_FOUND_CODE, http.HTTP_NOT_FOUND_MESSAGE);
+                throw new ApplicationError(http.HTTP_INTERNAL_SERVER_CODE, http.HTTP_NOT_FOUND_MESSAGE);
             }
             return result[0];
         } catch (error) {
@@ -78,14 +78,14 @@ class UserService {
         try {
             let result = await UserRepository.getUserByEmail(email);
             if (result.length == 0) {
-                throw new ApplicationError(http.HTTP_INVALID_AUTH_CODE, http.HTTP_INVALID_AUTH_MESSAGE);
+                throw new ApplicationError(http.HTTP_CLIENT_ERROR_CODE, http.HTTP_INVALID_AUTH_MESSAGE);
             }
             const userData = result[0];
             let { user_pass } = userData;
 
             const passwordHash = user_pass.replace('$2y$', '$2a$');
             if (!(await bcrypt.compare(password, passwordHash))) {
-                throw new ApplicationError(http.HTTP_INVALID_PASS_CODE, http.HTTP_INVALID_PASS_MESSAGE);
+                throw new ApplicationError(http.HTTP_CLIENT_ERROR_CODE, http.HTTP_INVALID_PASS_MESSAGE);
             }
             return true;
         } catch (error) {
@@ -170,6 +170,7 @@ class UserService {
 
             var column = ["currency","pivot","resistance_1","resistance_2","support_1","support_2"];
 
+            
             var listOfData = readData.data.values;
             var listOfResult =[];
             listOfData.forEach(data => {
@@ -185,6 +186,7 @@ class UserService {
                 listOfResult.push(row);
             });
 
+            
             return listOfResult;
 
         }catch(error){
