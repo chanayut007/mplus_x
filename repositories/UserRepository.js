@@ -1,3 +1,4 @@
+const e = require('express');
 const http = require('../constants/http');
 const ApplicationError = require('../model/error/ApplicationError');
 const MySQLConnector = require('../module/MySQLConnector');
@@ -22,6 +23,24 @@ class UserRepository {
         }
     }
 
+    async getUserById(userId) {
+        try {
+            let connection = await MySQLConnector.getConnection();
+            return await new Promise((resolve, reject) => {
+                connection.query('SELECT * FROM account.bk_user_account WHERE user_id = ?',
+                [userId],
+                (err, result) => {
+                    connection.release();
+                    if (err) reject(err);
+                    resolve(result);
+                });
+            });
+        } catch (error) {
+            console.log('UserRepository.getUserById() Exception: ', error);
+            throw new ApplicationError(http.HTTP_INTERNAL_SERVER_CODE, http.HTTP_INTERNAL_SERVER_MSG, error);
+        }
+    }
+
     async getUserPin(userId) {
         try {
             let connection = await MySQLConnector.getConnection();
@@ -37,6 +56,7 @@ class UserRepository {
                 });
             });
         } catch (error) {
+            console.log("Repository Error: " ,error);
             throw new ApplicationError(http.HTTP_INTERNAL_SERVER_CODE, http.HTTP_INTERNAL_SERVER_MSG, error);
         }
     }
@@ -47,7 +67,7 @@ class UserRepository {
            
             return await new Promise((resolve, reject) => {
                 connection.query("UPDATE bk_user_account SET user_pin_code = ? WHERE user_id = ?;",
-                [userPinCode,userId],
+                [userPinCode, userId],
                 (err, result) => {
                     connection.release();
                     if (err) reject(err);
@@ -66,12 +86,15 @@ class UserRepository {
            
             return await new Promise((resolve, reject) => {
                 //"SELECT  user_id, user_fullname, \n (concat(d_code_phone,substr(user_phone,2))) as mobile_no, \n user_email, concat(concat(concat(substr(user_birthday,9),\'/\') , concat(substr(user_birthday,6,2),\'/\') ) , substr(user_birthday,1,4)) as user_birthday,\n user_sex, user_nationality,concat(concat(concat(concat(user_address,\" \"),concat(user_state,\" \")) , concat(user_city,\" \")),user_zipcode) as address \n from account.bk_user_account buc \n where buc.user_id = ?"
-                connection.query("SELECT  user_id, user_fullname, \n d_code_phone, user_phone as mobile_no, \n user_email, concat(concat(concat(substr(user_birthday,9),\'/\') , concat(substr(user_birthday,6,2),\'/\') ) , substr(user_birthday,1,4)) as user_birthday, user_sex, user_nationality,concat(concat(concat(concat(user_address,\" \"), concat(user_state,\" \")), concat(user_city,\" \")),user_zipcode) as address from account.bk_user_account buc where buc.user_id = ?;",
+                connection.query("SELECT  user_id, user_fullname, d_code_phone, user_phone as mobile_no, user_email, concat(concat(concat(substr(user_birthday,9),\'/\') , concat(substr(user_birthday,6,2),\'/\') ) , substr(user_birthday,1,4)) as user_birthday, user_sex, user_nationality,concat(concat(concat(concat(user_address,\" \"), concat(user_state,\" \")), concat(user_city,\" \")),user_zipcode) as address from account.bk_user_account buc where buc.user_id = ?;",
                 [userId],
                 (err, result) => {
                     connection.release();
-                    if (err) reject(err);
-                    resolve(result);
+                    if (err){
+                        reject(err);
+                    } else {
+                        resolve(result);
+                    }
                 });
             });
         } catch (error) {
